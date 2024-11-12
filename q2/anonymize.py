@@ -1,52 +1,47 @@
-def anonymize_names_parta(text: str):
-    """
-    Anonymizes names in the given text by replacing them with 'ANON'. Assume names are capitalized, and no other words are.
 
-    Examples:
-        anonymize_names_parta("Alice and Bob are talking to Charlie.") 
-        -> "ANON and ANON are talking to ANON."
-        
-        anonymize_names_parta("Alice, Bob, and Charlie went to the park.") 
-        -> "ANON, ANON, and ANON went to the park."
-        
-        anonymize_names_parta("Dr. Alice visited Prof. Bob at the university.") 
-        -> "ANON ANON visited ANON ANON at the university."
 
-    Args:
-        text (str): The input text containing names.
- 
+"""
+Question 2a
+
+Write a Python function that accepts a string as input and replaces
+all occurrences of names with the string "ANON.”
+In the function’s docstring, list at least three test strings and the expected output.
+Assume names are capitalized words and may be separated by spaces or by punctuation.
+No other words are capitalized.
+
+"""
+
+
+def anonymize_names(text):
+    """
+    Replaces all occurrences of names (capitalized words) in the given text with 'ANON.'
+
+    Args: text (str): Input string containing names and other text.
+
     Returns:
-        str: The text with names anonymized.
+    str: Text with names replaced by 'ANON.'
+
+    Note: this question can also be solved with regular expression
+            return re.sub(r'\b[A-Z][a-z]*\b', 'ANON', text)
+
     """
-    # Replace all capitalized words with 'ANON' (a regular expression might be helpful; see the `re` module)
-    anonymized_text = "..."
-    return anonymized_text
- 
-def anonymize_names_partb(text: str):
-    """
-    Anonymizes names in the given text by replacing them with 'ANON'. Names can take any shape or form.
- 
-    Examples: (Note: Examples not provided as implementation depends on heuristics)
- 
-    Args:
-        text (str): The input text containing names.
- 
-    Returns:
-        str: The text with names anonymized.
-    """
-    # Placeholder implementation: This needs heuristics to identify names
-    anonymized_text = text  # This is where the logic will go
-    return anonymized_text
- 
+    words = text.split()
+    anonymized_words = []
+
+    for word in words:
+        # Remove trailing punctuation for the capitalization check
+        stripped_word = word.rstrip(",.!?;:")
+
+        if stripped_word.istitle():  # Check if the word is capitalized
+            anonymized_words.append("ANON" + word[len(stripped_word):])  # Preserve punctuation
+        else:
+            anonymized_words.append(word)
+
+    return ' '.join(anonymized_words)
+
  
 if __name__ == '__main__':
     # Example usage
-    parta_input_text = "Alice and Bob are talking to Charlie."
-    print("Part A")
-    print(f"{parta_input_text} -> {anonymize_names_parta(parta_input_text)}")
-    print()
-
-
     # Example strings- you can add more test strings. No expectation that these all
     # pass!
     partb_test_strings = [
@@ -71,6 +66,5 @@ if __name__ == '__main__':
         "Alice and Bob are thinking about a trip to Vancouver.",
         "Charlie and Eve are preparing for a move to Montreal."
     ]
-    print("Part B")
     for input_text in partb_test_strings:
-        print(f"{input_text} -> {anonymize_names_partb(input_text)}")
+        print(f"{input_text} -> {anonymize_names(input_text)}")
